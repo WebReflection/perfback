@@ -25,5 +25,13 @@
     "uglify-js": "^3.6.4"
   },
   "module": "esm/index.js",
-  "unpkg": "min.js"
+  "unpkg": "min.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebReflection/perfback.git"
+  },
+  "bugs": {
+    "url": "https://github.com/WebReflection/perfback/issues"
+  },
+  "homepage": "https://github.com/WebReflection/perfback#readme"
 }
