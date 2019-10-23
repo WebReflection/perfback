@@ -1,6 +1,6 @@
 {
   "name": "perfback",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A simple callback profiler",
   "main": "cjs/index.js",
   "scripts": {
