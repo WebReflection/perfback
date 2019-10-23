@@ -1,0 +1,29 @@
+{
+  "name": "perfback",
+  "version": "0.0.1",
+  "description": "A simple callback profiler",
+  "main": "cjs/index.js",
+  "scripts": {
+    "build": "npm run cjs && npm run esm && npm run min && npm run test",
+    "esm": "cp index.js esm/ && echo 'export default PerfBack;' >> esm/index.js",
+    "cjs": "cp index.js cjs/ && echo 'module.exports = PerfBack;' >> cjs/index.js",
+    "min": "uglifyjs index.js -mco min.js",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "test": "istanbul cover test/index.js"
+  },
+  "keywords": [
+    "callback",
+    "performance",
+    "profile",
+    "benchmark"
+  ],
+  "author": "Andrea Giammarchi",
+  "license": "ISC",
+  "devDependencies": {
+    "coveralls": "^3.0.7",
+    "istanbul": "^0.4.5",
+    "uglify-js": "^3.6.4"
+  },
+  "module": "esm/index.js",
+  "unpkg": "min.js"
+}
