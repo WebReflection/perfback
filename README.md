@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/WebReflection/perfback.svg?branch=master)](https://travis-ci.com/WebReflection/perfback) [![Coverage Status](https://coveralls.io/repos/github/WebReflection/perfback/badge.svg?branch=master)](https://coveralls.io/github/WebReflection/perfback?branch=master)
 
-A simple callback performance monitor
+A simple callback performance monitor, compatible with IE11 and above.
 
 ```js
 import PerfBack from 'perfback';
