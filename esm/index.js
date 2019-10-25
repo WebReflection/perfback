@@ -65,16 +65,20 @@ var PerfBack = (function (cache, random) {
   }
 
   function toString() {
-    return [
-      'function (cache, random) {',
-      '  return ' + PerfBack + '(' + this.production + ', ' + !this.log + ');',
-      '  ' + start,
-      '  ' + end,
-      '  ' + measure,
-      '  ' + pass,
-      '  ' + toString,
-      '}(Object.create(null), Math.random())'
-    ].join('\n');
+    return this.production ?
+      'function (pass, toString) { return {production: true, log: false,' +
+      ' start: pass, end: pass, measure: pass, toString: toString}; }(\n' +
+      pass + ',\n' + toString + ')' :
+      [
+        'function (cache, random) {',
+        '  return ' + PerfBack + '(false, ' + !this.log + ');',
+        '  ' + start,
+        '  ' + end,
+        '  ' + measure,
+        '  ' + pass,
+        '  ' + toString,
+        '}(Object.create(null), Math.random())'
+      ].join('\n');
   }
 }(
   Object.create(null),
