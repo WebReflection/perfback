@@ -15,6 +15,7 @@ cb();
 pb = PerfBack(true);
 cb = pb.measure(function () {});
 cb();
+pb.toString();
 
 pb = PerfBack(false, true);
 cb = pb.measure(function () {});
@@ -29,3 +30,4 @@ pb.end(id);
 
 id = pb.start();
 pb.end(id);
+pb.toString();
