@@ -1,38 +1,61 @@
-function PerfBack(production, ignoreLogs) {
-  var __proto__ = PerfBack.prototype;
-  var profiler = {__proto__: __proto__, log: !ignoreLogs};
-  return Object.defineProperties(
-    profiler,
-    {
-      production: {value: !!production},
-      measure: {value: __proto__.measure.bind(profiler)}
-    }
-  );
-}
-
-PerfBack.prototype.measure = function measure(name, fn) {
-  var self = this;
-  if (self.production)
-    return fn || name;
-  if (arguments.length < 2) {
-    fn = name;
-    name = fn.name || ''.split.call(fn, /[\r\n]+/)[0].slice(0, 80);
-  }
-  var random = Math.random();
-  var i = 0;
-  return function () {
-    var log = self.log;
-    if (log) {
-      var id = name + random + i++;
-      performance.mark(id);
-    }
-    var result = fn.apply(this, arguments);
-    if (log) {
-      performance.measure(id, id);
-      performance.clearMarks(id);
-      console.log(name, performance.getEntriesByName(id)[0].duration);
-      performance.clearMeasures(id);
-    }
-    return result;
+var PerfBack = (function (cache, random) {
+  return function PerfBack(production, ignoreLogs) {
+    return production ?
+      {
+        production: true,
+        log: false,
+        start: pass,
+        end: pass,
+        measure: pass
+      } :
+      {
+        production: false,
+        log: !ignoreLogs,
+        get start() {
+          return start.bind(this);
+        },
+        get end() {
+          return end.bind(this);
+        },
+        get measure() {
+          return measure.bind(this);
+        }
+      };
   };
-};
+
+  function end(id) {
+    performance.measure(id, id);
+    performance.clearMarks(id);
+    console.log(cache[id], performance.getEntriesByName(id)[0].duration);
+    performance.clearMeasures(id);
+    delete cache[id];
+  }
+
+  function start(name) {
+    var id = '' + random++;
+    cache[id] = name || 'function';
+    performance.mark(id);
+    return id;
+  }
+
+  function measure(name, callback) {
+    var fn = callback || name;
+    var log = fn === name ?
+              (fn.name || ''.split.call(fn, /[\r\n]+/)[0].slice(0, 80)) :
+              name;
+    var self = this;
+    return function () {
+      var id = self.log ? start(log) : '';
+      var result = fn.apply(this, arguments);
+      if (id) end(id);
+      return result;
+    };
+  }
+
+  function pass(name, callback) {
+    return callback || name;
+  }
+}(
+  Object.create(null),
+  Math.random()
+));

@@ -3,7 +3,7 @@ global.performance = {
   measure: Object,
   clearMarks: Object,
   clearMeasures: Object,
-  getEntriesByName: () => ['']
+  getEntriesByName: () => [{duration: Math.random()}]
 };
 
 var PerfBack = require('../cjs');
@@ -24,3 +24,8 @@ pb = PerfBack();
 cb = pb.measure('no-op', function () {});
 cb();
 
+var id = pb.start('callback');
+pb.end(id);
+
+id = pb.start();
+pb.end(id);
