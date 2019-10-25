@@ -26,9 +26,12 @@ var PerfBack = (function (cache, random) {
   function end(id) {
     performance.measure(id, id);
     performance.clearMarks(id);
-    console.log(cache[id], performance.getEntriesByName(id)[0].duration);
+    var name = cache[id];
+    var duration = performance.getEntriesByName(id)[0].duration;
+    console.log(name, duration);
     performance.clearMeasures(id);
     delete cache[id];
+    return {name: name, duration: duration};
   }
 
   function start(name) {
