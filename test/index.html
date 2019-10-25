@@ -9,12 +9,18 @@
   <script>
   var pb = PerfBack(), id = '';
   addEventListener('DOMContentLoaded', function () {
-    id = pb.start('load');
+    id = pb.start('DOMContentLoaded');
   });
-  addEventListener('load', function () {
+  addEventListener('load', pb.measure('load', function () {
     var result = pb.end(id);
     document.body.textContent = result.name + ': ' + result.duration;
-  });
+    pb = Function('return ' + pb)();
+    id = pb.start();
+    setTimeout(function timeout() {
+      pb.end(id);
+      document.body.textContent += ' ✔';
+    }, 100);
+  }));
   </script>
 </head>
 </html>

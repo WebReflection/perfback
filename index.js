@@ -1,16 +1,20 @@
 var PerfBack = (function (cache, random) {
-  return function PerfBack(production, ignoreLogs) {
+
+  return PerfBack;
+
+  function PerfBack(production, noLog) {
     return production ?
       {
         production: true,
         log: false,
         start: pass,
         end: pass,
-        measure: pass
+        measure: pass,
+        toString: toString
       } :
       {
         production: false,
-        log: !ignoreLogs,
+        log: !noLog,
         get start() {
           return start.bind(this);
         },
@@ -19,9 +23,10 @@ var PerfBack = (function (cache, random) {
         },
         get measure() {
           return measure.bind(this);
-        }
+        },
+        toString: toString
       };
-  };
+  }
 
   function end(id) {
     performance.measure(id, id);
@@ -43,12 +48,12 @@ var PerfBack = (function (cache, random) {
 
   function measure(name, callback) {
     var fn = callback || name;
-    var log = fn === name ?
-              (fn.name || ''.split.call(fn, /[\r\n]+/)[0].slice(0, 80)) :
-              name;
+    var mark = fn === name ?
+                (fn.name || ''.split.call(fn, /[\r\n]+/)[0].slice(0, 80)) :
+                name;
     var self = this;
     return function () {
-      var id = self.log ? start(log) : '';
+      var id = self.log ? start(mark) : '';
       var result = fn.apply(this, arguments);
       if (id) end(id);
       return result;
@@ -57,6 +62,19 @@ var PerfBack = (function (cache, random) {
 
   function pass(name, callback) {
     return callback || name;
+  }
+
+  function toString() {
+    return [
+      'function (cache, random) {',
+      '  return ' + PerfBack + '(' + this.production + ', ' + !this.log + ');',
+      '  ' + start,
+      '  ' + end,
+      '  ' + measure,
+      '  ' + pass,
+      '  ' + toString,
+      '}(Object.create(null), Math.random())'
+    ].join('\n');
   }
 }(
   Object.create(null),
