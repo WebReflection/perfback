@@ -19,3 +19,8 @@ cb();
 pb = PerfBack(false, true);
 cb = pb.measure(function () {});
 cb();
+
+pb = PerfBack();
+cb = pb.measure('no-op', function () {});
+cb();
+

@@ -10,20 +10,24 @@ function PerfBack(production, ignoreLogs) {
   );
 }
 
-PerfBack.prototype.measure = function measure(fn) {
+PerfBack.prototype.measure = function measure(name, fn) {
   var self = this;
   if (self.production)
-    return fn;
-  var name = fn.name || ''.split.call(fn, /[\r\n]+/)[0].slice(0, 80);
+    return fn || name;
+  if (arguments.length < 2) {
+    fn = name;
+    name = fn.name || ''.split.call(fn, /[\r\n]+/)[0].slice(0, 80);
+  }
   var random = Math.random();
   var i = 0;
   return function () {
-    if (self.log) {
+    var log = self.log;
+    if (log) {
       var id = name + random + i++;
       performance.mark(id);
     }
     var result = fn.apply(this, arguments);
-    if (id) {
+    if (log) {
       performance.measure(id, id);
       performance.clearMarks(id);
       console.log(name, performance.getEntriesByName(id)[0].duration);

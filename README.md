@@ -15,8 +15,13 @@ const pb = new PerfBack(
                 // false by default
 );
 
+// pass a function
 const fn = pb.measure(() => {});
 
+// or a name to log, and a function
+const fn = pb.measure('noop', () => {});
+
 // from now on, every fn() call will log its invoking duration
+fn();
 
 ```
